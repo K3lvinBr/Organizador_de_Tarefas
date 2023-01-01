@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
-import 'screens/intial_screen.dart';
+import 'package:primeiro_projeto_flutter/data/task_provider.dart';
+import 'package:primeiro_projeto_flutter/screens/intial_screen.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+      ChangeNotifierProvider(
+        create: (context) => TaskProvider(),
+        child: const MyApp()
+      ),
+  );
 }
 
 // ignore: must_be_immutable

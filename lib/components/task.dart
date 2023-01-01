@@ -1,21 +1,41 @@
 import 'package:flutter/material.dart';
 import 'difficulty.dart';
 
+// ignore: must_be_immutable
 class Task extends StatefulWidget {
   final String nome;
   final String foto;
   final int dificuldade;
 
-  const Task(this.nome, this.foto, this.dificuldade, {Key? key})
-      : super(key: key);
+  Task(this.nome, this.foto, this.dificuldade, {Key? key}) : super(key: key);
+
+  int nivel = 0;
+  int novoNivel = 0;
 
   @override
   State<Task> createState() => _TaskState();
 }
 
 class _TaskState extends State<Task> {
-  int nivel = 0;
-  int novoNivel = 0;
+  bool assetsOrNetwok() {
+    if (widget.foto.contains('http')) {
+      return false;
+    }
+    return true;
+  }
+
+  changeColor(nivel) {
+    switch (nivel) {
+      case 0:
+        return Colors.blue;
+      case 1:
+        return Colors.green;
+      case 2:
+        return Colors.yellow;
+      default:
+        return Colors.red;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +46,7 @@ class _TaskState extends State<Task> {
           Container(
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(4),
-                color: changeColor(novoNivel)),
+                color: changeColor(widget.novoNivel)),
             height: 140,
           ),
           Column(
@@ -46,12 +66,13 @@ class _TaskState extends State<Task> {
                       width: 72,
                       height: 100,
                       child: ClipRRect(
-                        borderRadius: BorderRadius.circular(4),
-                        child: Image.network(
-                          widget.foto,
-                          fit: BoxFit.cover,
-                        ),
-                      ),
+                          borderRadius: BorderRadius.circular(4),
+                          child: assetsOrNetwok()
+                              ? const Icon(Icons.no_photography_outlined)
+                              : Image.network(
+                                  widget.foto,
+                                  fit: BoxFit.cover,
+                                )),
                     ),
                     Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -78,10 +99,12 @@ class _TaskState extends State<Task> {
                         child: ElevatedButton(
                             onPressed: () {
                               setState(() {
-                                nivel++;
-                                if (nivel / widget.dificuldade / 10 > 1 && novoNivel < 3) {
-                                  nivel = 1;
-                                  novoNivel++;
+                                widget.nivel++;
+                                if (widget.nivel / widget.dificuldade / 10 >
+                                        1 &&
+                                    widget.novoNivel < 3) {
+                                  widget.nivel = 1;
+                                  widget.novoNivel++;
                                 }
                               });
                             },
@@ -113,7 +136,7 @@ class _TaskState extends State<Task> {
                       child: LinearProgressIndicator(
                         color: Colors.white,
                         value: (widget.dificuldade > 0)
-                            ? (nivel / widget.dificuldade / 10)
+                            ? (widget.nivel / widget.dificuldade / 10)
                             : 1,
                       ),
                     ),
@@ -121,7 +144,7 @@ class _TaskState extends State<Task> {
                   Padding(
                     padding: const EdgeInsets.all(12),
                     child: Text(
-                      'Nível: $nivel',
+                      'Nível: ${widget.nivel}',
                       style: const TextStyle(color: Colors.white, fontSize: 16),
                     ),
                   ),
@@ -132,18 +155,5 @@ class _TaskState extends State<Task> {
         ],
       ),
     );
-  }
-}
-
-changeColor(nivel) {
-  switch (nivel) {
-    case 0:
-      return Colors.blue;
-    case 1:
-      return Colors.green;
-    case 2:
-      return Colors.yellow;
-    default:
-      return Colors.red;
   }
 }
