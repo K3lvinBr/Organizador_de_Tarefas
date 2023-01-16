@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:primeiro_projeto_flutter/data/task_provider.dart';
-import 'package:provider/provider.dart';
+import 'package:primeiro_projeto_flutter/components/task.dart';
+import 'package:primeiro_projeto_flutter/data/task_dao.dart';
 
 class FormScreen extends StatefulWidget {
   const FormScreen({Key? key, required this.taskContext}) : super(key: key);
@@ -142,10 +142,12 @@ class _FormScreenState extends State<FormScreen> {
                     ElevatedButton(
                         onPressed: () {
                           if (_formKey.currentState!.validate()) {
-                            Provider.of<TaskProvider>(widget.taskContext, listen: false).newTask(
+                            TaskDao().save(Task(
                                 nameController.text,
                                 imageController.text,
-                                int.parse(difficultyController.text));
+                                int.parse(difficultyController.text),
+                                0,
+                                0));
                             ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(
                                     content: Text('Salvando nova Tarefa')));

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+
+import '../data/task_dao.dart';
 import 'difficulty.dart';
 
 // ignore: must_be_immutable
@@ -6,11 +8,12 @@ class Task extends StatefulWidget {
   final String nome;
   final String foto;
   final int dificuldade;
+  int nivel;
+  int novoNivel;
 
-  Task(this.nome, this.foto, this.dificuldade, {Key? key}) : super(key: key);
-
-  int nivel = 0;
-  int novoNivel = 0;
+  Task(this.nome, this.foto, this.dificuldade, this.nivel, this.novoNivel,
+      {Key? key})
+      : super(key: key);
 
   @override
   State<Task> createState() => _TaskState();
@@ -97,6 +100,35 @@ class _TaskState extends State<Task> {
                         height: 52,
                         width: 52,
                         child: ElevatedButton(
+                            onLongPress: () {
+                              showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      title: Row(
+                                        children: const [
+                                          Text('Deletar'),
+                                          Icon(Icons.delete)
+                                        ],
+                                      ),
+                                      content: const Text(
+                                          'Tem certeza que deseja deletar essa Tarefa?'),
+                                      actions: [
+                                        TextButton(
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                            child: const Text('Não')),
+                                        TextButton(
+                                            onPressed: () {
+                                              TaskDao().delete(widget.nome);
+                                              Navigator.of(context).pop();
+                                            },
+                                            child: const Text('Sim'))
+                                      ],
+                                    );
+                                  });
+                            },
                             onPressed: () {
                               setState(() {
                                 widget.nivel++;
@@ -107,6 +139,12 @@ class _TaskState extends State<Task> {
                                   widget.novoNivel++;
                                 }
                               });
+                              TaskDao().save(Task(
+                                  widget.nome,
+                                  widget.foto,
+                                  widget.dificuldade,
+                                  widget.nivel,
+                                  widget.novoNivel));
                             },
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
