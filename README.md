@@ -1,6 +1,6 @@
 # 🔨 Projeto: Organizador de Tarefas
 
-Organizador de Tarefas, com o intuito de produzir um formulário que adiciona uma nova tarefa customizada!
+App Organizador de Tarefas em Flutter, com o intuito de produzir um formulário que adiciona uma nova tarefa customizada e guardá-la na memória do smartphone utilizando o SQLite.
 
 ![](to_README/flutter_gif.gif)
 
